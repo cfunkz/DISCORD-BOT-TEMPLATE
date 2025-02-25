@@ -3,19 +3,8 @@ from discord import app_commands
 from discord.ext import commands
 import logging, os
 from utils import get_time
-from dotenv import load_dotenv
 from database import init_db
-
-load_dotenv()
-
-TOKEN=os.getenv('TOKEN')
-ADMIN_IDS=os.getenv('ADMIN_IDS')
-ADMIN_GUILDS = os.getenv('ADMIN_GUILD')
-OWNER = os.getenv('OWNER')
-if ADMIN_GUILDS:
-    ADMIN_GUILDS = [int(guild_id) for guild_id in ADMIN_GUILDS.split(",")]
-else:
-    ADMIN_GUILDS = []
+from config import *
 
 logging.basicConfig(level=logging.INFO)  # Suppress messages below ERROR level
 logger = logging.getLogger(__name__)
@@ -26,7 +15,6 @@ class MainBot(commands.Bot):
         
     async def setup_hook(self):
         await self.load_cogs()
-        logger.info(' Cogs loaded')
         init_db()
         logger.info(' Database initialized')
         logger.info(' Setup hook done.')

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 import random
+import logging
 
 class TaskLoops(commands.Cog):
     def __init__(self, bot):
@@ -17,8 +18,9 @@ class TaskLoops(commands.Cog):
     
     def cog_unload(self):
         self.background_task.cancel()
-        print('TaskLoops cog unloaded')
-
+        print(f'{__class__.__name__} cog unloaded')
+    def cog_load(self):
+        return logging.info(f'{__class__.__name__} cog loaded')
 
 async def setup(bot):
     await bot.add_cog(TaskLoops(bot))

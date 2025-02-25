@@ -8,7 +8,7 @@ import json
 from views.modal import MyModal
 from views.selectmenu import SelectMenuView
 from views.buttons import ButtonView
-
+import logging
 # Slash commands or app_commands that are used via "/"
 
 class SlashCMDS(commands.Cog):
@@ -153,6 +153,8 @@ class SlashCMDS(commands.Cog):
     def cog_unload(self):
         print(f'{__class__.__name__} cog unloaded')
     
-
+    def cog_load(self):
+        return logging.info(f'{__class__.__name__} cog loaded')
+    
 async def setup(bot):
     await bot.add_cog(SlashCMDS(bot))

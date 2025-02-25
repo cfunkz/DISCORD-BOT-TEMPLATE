@@ -1,5 +1,5 @@
 from discord.ext import commands
-
+import logging
 # Prefix commands are called via "!" or any other prefix you set on the bot startup via bot.py
 
 class PrefixCMDS(commands.Cog):
@@ -13,6 +13,8 @@ class PrefixCMDS(commands.Cog):
 
     def cog_unload(self):
         print(f'{__class__.__name__} cog unloaded')
- 
+    def cog_load(self):
+        return logging.info(f'{__class__.__name__} cog loaded')
+    
 async def setup(bot):
     await bot.add_cog(PrefixCMDS(bot))
