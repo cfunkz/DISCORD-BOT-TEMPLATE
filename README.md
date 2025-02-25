@@ -1,6 +1,6 @@
 `.env`
 
-TOKEN=""
-ADMIN_IDS=[]
-ADMIN_GUILD=[]
-OWNER=...
+- TOKEN=""
+- ADMIN_IDS=[]
+- ADMIN_GUILD=[]
+- OWNER=...
