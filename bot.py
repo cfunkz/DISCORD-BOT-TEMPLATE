@@ -10,8 +10,12 @@ load_dotenv()
 
 TOKEN=os.getenv('TOKEN')
 ADMIN_IDS=os.getenv('ADMIN_IDS')
-ADMIN_GUILDS = os.getenv('ADMIN_GUILDS')
+ADMIN_GUILDS = os.getenv('ADMIN_GUILD')
 OWNER = os.getenv('OWNER')
+if ADMIN_GUILDS:
+    ADMIN_GUILDS = [int(guild_id) for guild_id in ADMIN_GUILDS.split(",")]
+else:
+    ADMIN_GUILDS = []
 
 logging.basicConfig(level=logging.INFO)  # Suppress messages below ERROR level
 logger = logging.getLogger(__name__)
