@@ -89,13 +89,16 @@ class SlashCMDS(commands.Cog):
     async def select_menu_command(self, interaction: discord.Interaction):
         view = SelectMenuView()
         await interaction.response.send_message("Please select an option from the menu:", view=view)
+        message = await interaction.original_response()
+        view.message = message #Attach message to view
         
     ############### Command select menu
     @app_commands.command(name="buttons", description="Example of Buttons")
     async def button_command(self, inter: discord.Interaction):
         view = ButtonView(inter.user)
-        msg = await inter.response.send_message("Click a button:", view=view)
-        view.message = msg #Attach message to view
+        await inter.response.send_message("Click a button:", view=view)
+        message = await inter.original_response()
+        view.message = message #Attach message to view
         
     ############### Command groups
     inventory = app_commands.Group(name="inventory", description="Get user inventory!")

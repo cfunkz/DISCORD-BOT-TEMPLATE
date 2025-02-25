@@ -5,15 +5,14 @@ import discord
 
 class ButtonView(View):
     def __init__(self, user):
-        super().__init__(timeout=30)
+        super().__init__(timeout=15)
         self.user = user
         
     async def on_timeout(self):
         for item in self.children:
             item.disabled = True
         if self.message:
-            await self.message.edit_message(view=None)
-            self.stop()
+            await self.message.edit(view=None)
             
     @discord.ui.button(emoji="👍", label="Click Me!", row=1, style=discord.ButtonStyle.primary)
     async def button_1(self, interaction: discord.Interaction, button: Button):
