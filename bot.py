@@ -8,15 +8,17 @@ from database import init_db
 
 load_dotenv()
 
-OWNERS=[250744009029451788]
-ADMIN_IDS=[]
+TOKEN=os.getenv('TOKEN')
+ADMIN_IDS=os.getenv('ADMIN_IDS')
+ADMIN_GUILDS = os.getenv('ADMIN_GUILDS')
+OWNER = os.getenv('OWNER')
 
 logging.basicConfig(level=logging.INFO)  # Suppress messages below ERROR level
 logger = logging.getLogger(__name__)
 
 class MainBot(commands.Bot):
     def __init__(self, *, intents: discord.Intents):
-        super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=intents, owner_ids=OWNERS, activity=discord.Game(name="THIS IS A SAMPLE MESSAGE AS ACTIVITY"))
+        super().__init__(command_prefix=commands.when_mentioned_or('!'), intents=intents, owner_ids=OWNER, activity=discord.Game(name="THIS IS A SAMPLE MESSAGE AS ACTIVITY"))
         
     async def setup_hook(self):
         await self.load_cogs()
@@ -78,4 +80,4 @@ intents.presences = True # For presence intents
 client = MainBot(intents=intents)
 
 if __name__ == '__main__':
-    client.run(os.getenv('TOKEN'))
+    client.run(TOKEN)

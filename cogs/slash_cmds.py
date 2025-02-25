@@ -102,7 +102,6 @@ class SlashCMDS(commands.Cog):
             await inter.response.send_message("Register via `/start`.", ephemeral=True)
         # Check if item exists in inventory
         if item in user_inventory and user_inventory[item] > 0:
-            # Decrease the amount of the item by 1
             user_inventory[item] -= 1
             # If the amount reaches 0, remove the item from the inventory
             if user_inventory[item] == 0:
@@ -114,7 +113,7 @@ class SlashCMDS(commands.Cog):
         else:
             await inter.response.send_message(f"You don't have any {item} in your inventory.", ephemeral=True)
 
-    # Autocomplete for the `use` command
+    # Autocomplete for the `use` command, `item` argument
     @_use_inventory.autocomplete('item')
     async def search_autocomplete(self, interaction: discord.Interaction, item: str):
         user = User.get_user(interaction.user.id)
@@ -123,6 +122,9 @@ class SlashCMDS(commands.Cog):
         matching_items = [i for i in user_inventory if item.lower() in i.lower()]
         # Return filtered matching items as autocompletion choices
         return [app_commands.Choice(name=i, value=i) for i in matching_items]
+    
+    def cog_unload(self):
+        print(f'{__class__.__name__} cog unloaded')
     
 
 async def setup(bot):
