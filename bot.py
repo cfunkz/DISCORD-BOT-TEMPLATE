@@ -50,7 +50,8 @@ class MainBot(commands.Bot):
         elif isinstance(error, commands.BadArgument):
             await ctx.send("Bad command argument provided.")
         elif isinstance(error, commands.CommandOnCooldown):
-            hours, minutes, seconds = get_time(error)
+            time = error.retry_after
+            hours, minutes, seconds = get_time(time)
             if hours > 0:
                 cooldown_message = f"This command is on cooldown. Try again in {hours:.0f} hours and {minutes:.0f} minutes."
             elif minutes > 0:
