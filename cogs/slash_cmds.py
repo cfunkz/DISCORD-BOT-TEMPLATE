@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-from discord import Interaction, Member, app_commands
+from discord import Interaction, Member
+from discord.app_commands import Choice, command, describe, choices, Group
 from typing import Literal
 from database.functions import User
 import json
@@ -15,12 +16,12 @@ class SlashCMDS(commands.Cog):
         self.bot = bot
 
     # Slash commands uses "@app_commands" decorator.
-    @app_commands.command(name="start", description="Create a user profile!")
+    @command(name="start", description="Create a user profile!")
     async def _start(self, inter: Interaction):
         User.add_user(inter.user.id)
         await inter.response.send_message("User profile created!", ephemeral=True)
 
-    @app_commands.command(name="profile", description="Get detailed profile information!")
+    @command(name="profile", description="Get detailed profile information!")
     async def _get_profile(self, inter: Interaction):
         member = inter.user
         embed = discord.Embed(title=f"Profile of {member.name}#{member.discriminator}", color=discord.Color.blue())
@@ -42,7 +43,7 @@ class SlashCMDS(commands.Cog):
         embed.set_thumbnail(url=member.avatar.url if member.avatar else "https://cdn.discordapp.com/embed/avatars/0.png")
         await inter.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.command(name="user", description="Get a user profile summary!")
+    @command(name="user", description="Get a user profile summary!")
     async def _get_user(self, inter: Interaction, member: Member):
         embed = discord.Embed(title=f"User Info: {member.global_name}#{member.discriminator}", color=discord.Color.green())
         embed.add_field(name="Username", value=f"{member.name}#{member.discriminator}", inline=False)
@@ -62,38 +63,38 @@ class SlashCMDS(commands.Cog):
     
     
     ############### Command options
-    @app_commands.command(name="literal_options", description="Get server information!")
+    @command(name="literal_options", description="Get server information!")
     async def _literal_options(self, inter: Interaction, option: Literal["option1", "option2", "option3"]):
         await inter.response.send_message(f"Option selected: {option}", ephemeral=True)
         
     ############### Command options 2
-    @app_commands.command(name="app_command_options", description="Get server information!")
-    @app_commands.describe(option="Choose an option")
-    @app_commands.choices(
+    @command(name="app_command_options", description="Get server information!")
+    @describe(option="Choose an option")
+    @choices(
         option=[
-            app_commands.Choice(name="Option 1", value="option1"),
-            app_commands.Choice(name="Option 2", value="option2"),
-            app_commands.Choice(name="Option 3", value="option3")
+            Choice(name="Option 1", value="option1"),
+            Choice(name="Option 2", value="option2"),
+            Choice(name="Option 3", value="option3")
         ]
     )
-    async def _app_command_options(self, inter: Interaction, option: app_commands.Choice[str]):
+    async def _app_command_options(self, inter: Interaction, option: Choice[str]):
         await inter.response.send_message(f"Option selected: {option.name}", ephemeral=True)
 
-    ############### Command modal
-    @app_commands.command(name="modal", description="Modal test!")
+    ############### Command with modal
+    @command(name="modal", description="Modal test!")
     async def _modal_hybrid_ctx(self, inter: Interaction):
         await inter.response.send_modal(MyModal())
 
-    ############### Command select menu
-    @app_commands.command(name="selectmenu", description="Example of Select Menu")
+    ############### Command with select menu
+    @command(name="selectmenu", description="Example of Select Menu")
     async def select_menu_command(self, interaction: discord.Interaction):
         view = SelectMenuView()
         await interaction.response.send_message("Please select an option from the menu:", view=view)
         message = await interaction.original_response()
         view.message = message #Attach message to view
         
-    ############### Command select menu
-    @app_commands.command(name="buttons", description="Example of Buttons")
+    ############### Command with buttons
+    @command(name="buttons", description="Example of Buttons")
     async def button_command(self, inter: discord.Interaction):
         view = ButtonView(inter.user)
         await inter.response.send_message("Click a button:", view=view)
@@ -101,7 +102,7 @@ class SlashCMDS(commands.Cog):
         view.message = message #Attach message to view
         
     ############### Command groups
-    inventory = app_commands.Group(name="inventory", description="Get user inventory!")
+    inventory = Group(name="inventory", description="Get user inventory!")
 
     @inventory.command(name="check", description="Check your inventory!")
     async def _get_inventory(self, inter: Interaction):
@@ -147,7 +148,7 @@ class SlashCMDS(commands.Cog):
         # Filter items based on the user input
         matching_items = [i for i in user_inventory if item.lower() in i.lower()]
         # Return filtered matching items as autocompletion choices
-        return [app_commands.Choice(name=i, value=i) for i in matching_items]
+        return [Choice(name=i, value=i) for i in matching_items]
     
     def cog_unload(self):
         print(f'{__class__.__name__} cog unloaded')
