@@ -4,6 +4,9 @@ from discord import Interaction, Member, app_commands
 from typing import Literal
 from database.functions import User
 import json
+from views.modal import MyModal
+from views.selectmenu import SelectMenuView
+from views.buttons import ButtonView
 
 # Slash commands or app_commands that are used via "/"
 
@@ -74,17 +77,34 @@ class SlashCMDS(commands.Cog):
         ]
     )
     async def _app_command_options(self, inter: Interaction, option: app_commands.Choice[str]):
-        # Respond with the selected option
         await inter.response.send_message(f"Option selected: {option.name}", ephemeral=True)
 
+    ############### Command modal
+    @app_commands.command(name="modal", description="Modal test!")
+    async def _modal_hybrid_ctx(self, inter: Interaction):
+        await inter.response.send_modal(MyModal())
 
+    ############### Command select menu
+    @app_commands.command(name="selectmenu", description="Example of Select Menu")
+    async def select_menu_command(self, interaction: discord.Interaction):
+        view = SelectMenuView()
+        await interaction.response.send_message("Please select an option from the menu:", view=view)
+        
+    ############### Command select menu
+    @app_commands.command(name="buttons", description="Example of Buttons")
+    async def select_menu_command(self, inter: discord.Interaction):
+        view = ButtonView(inter.user)
+        msg = await inter.response.send_message("Click a button:", view=view)
+        view.message = msg #Attach message to view
+        
     ############### Command groups
     inventory = app_commands.Group(name="inventory", description="Get user inventory!")
 
     @inventory.command(name="check", description="Check your inventory!")
     async def _get_inventory(self, inter: Interaction):
         user = User.get_user(inter.user.id)
-        print(user)
+        if user is None:
+            await inter.response.send_message("Register via `/start`.", ephemeral=True)
         user_inventory = json.loads(user['inventory'])  # Load the inventory (from JSON)
         # Format inventory as a string
         inventory_str = '\n'.join([f"{item}: {amount}" for item, amount in user_inventory.items()])
@@ -96,7 +116,8 @@ class SlashCMDS(commands.Cog):
     @inventory.command(name="use", description="Use an item from your inventory!")
     async def _use_inventory(self, inter: Interaction, item: str):
         user = User.get_user(inter.user.id)
-        print(user)
+        if user is None:
+            await inter.response.send_message("Register via `/start`.", ephemeral=True)
         user_inventory = json.loads(user['inventory'])  # Load the inventory (from JSON)
         if not user_inventory:
             await inter.response.send_message("Register via `/start`.", ephemeral=True)
@@ -117,6 +138,8 @@ class SlashCMDS(commands.Cog):
     @_use_inventory.autocomplete('item')
     async def search_autocomplete(self, interaction: discord.Interaction, item: str):
         user = User.get_user(interaction.user.id)
+        if user is None:
+            return []
         user_inventory = json.loads(user['inventory'])  # Load the inventory (from JSON)
         # Filter items based on the user input
         matching_items = [i for i in user_inventory if item.lower() in i.lower()]

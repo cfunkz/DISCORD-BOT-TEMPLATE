@@ -10,10 +10,9 @@ class HybridCMDS(commands.Cog):
     # Hybrid commands uses "@commands" decorator.
     @commands.hybrid_command(name="ping", description="Pong!")
     async def _ping_hybrid_ctx(self, ctx):
-        await ctx.send("Pong!")    
+        await ctx.send("Pong!")
 
     def cog_unload(self):
-        self.background_task.cancel()
         print(f'{__class__.__name__} cog unloaded')
 
 async def setup(bot):
