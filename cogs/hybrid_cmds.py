@@ -13,7 +13,6 @@ class HybridCMDS(commands.Cog):
         await ctx.send("Pong!")    
 
     def cog_unload(self):
-        self.background_task.cancel()
         print(f'{__class__.__name__} cog unloaded')
 
 async def setup(bot):
