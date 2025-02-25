@@ -27,7 +27,6 @@ class AdminCMDS(commands.Cog):
 
     @_reload_cog_interaction.autocomplete(name="cog")
     async def cog_autocomplete(self, interaction: Interaction, current: str) -> list[Choice[str]]:
-        """Autocompletes available cogs from the 'cogs' folder."""
         cogs = [
             f[:-3] for f in os.listdir("cogs")
             if f.endswith(".py") and f != "__init__.py"
