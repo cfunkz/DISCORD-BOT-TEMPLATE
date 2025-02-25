@@ -1,6 +1,6 @@
 `pip install discord python-dotenv`
 
-###.env
+.env
 - TOKEN=""
 - ADMIN_IDS=[]
 - ADMIN_GUILD=[]
