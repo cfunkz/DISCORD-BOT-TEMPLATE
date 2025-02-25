@@ -92,7 +92,7 @@ class SlashCMDS(commands.Cog):
         
     ############### Command select menu
     @app_commands.command(name="buttons", description="Example of Buttons")
-    async def select_menu_command(self, inter: discord.Interaction):
+    async def button_command(self, inter: discord.Interaction):
         view = ButtonView(inter.user)
         msg = await inter.response.send_message("Click a button:", view=view)
         view.message = msg #Attach message to view

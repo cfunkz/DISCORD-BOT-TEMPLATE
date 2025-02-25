@@ -12,7 +12,7 @@ class ButtonView(View):
         for item in self.children:
             item.disabled = True
         if self.message:
-            await self.message.delete()
+            await self.message.edit_message(view=None)
             self.stop()
             
     @discord.ui.button(emoji="👍", label="Click Me!", row=1, style=discord.ButtonStyle.primary)
